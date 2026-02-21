@@ -1,3 +1,5 @@
+## Failed Hackathon Project
+
 # MergeMind
 
 MergeMind is a GitHub App that automatically reviews pull requests using Claude AI. When a developer opens a PR, MergeMind scans the diff for security vulnerabilities, bugs, missing tests, and code quality issues — then posts a detailed review comment directly on the PR before any human has to look at it.
