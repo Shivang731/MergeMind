@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// PRStatus values: "PENDING" | "SCANNING" | "PASSED" | "FAILED"
+// ReviewStatus values: "PASSED" | "FAILED"
+// Severity values: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW"
+// IssueType values: "SECURITY" | "BUG" | "MISSING_TESTS" | "CODE_QUALITY" | "CONTEXT"
+
+model PullRequest {
+  id           String   @id @default(cuid())
+  prNumber     Int
+  owner        String
+  repo         String
+  title        String
+  author       String
+  baseBranch   String
+  headBranch   String
+  diffUrl      String
+  filesChanged String
+  status       String   @default("PENDING")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  reviews      Review[]
+
+  @@unique([owner, repo, prNumber])
+}
+
+model Review {
+  id            String      @id @default(cuid())
+  pullRequestId String
+  pullRequest   PullRequest @relation(fields: [pullRequestId], references: [id])
+  commitSha     String
+  status        String
+  healthScore   Int
+  rawComment    String
+  summaryText   String
+  createdAt     DateTime    @default(now())
+  issues        Issue[]
+}
+
+model Issue {
+  id        String   @id @default(cuid())
+  reviewId  String
+  review    Review   @relation(fields: [reviewId], references: [id])
+  severity  String
+  type      String
+  title     String
+  file      String
+  line      Int
+  problem   String
+  code      String
+  fix       String
+  createdAt DateTime @default(now())
+}

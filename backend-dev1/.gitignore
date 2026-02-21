@@ -1,0 +1,6 @@
+# backend-dev1/.gitignore
+node_modules/
+dist/
+.env
+*.db
+*.pem
