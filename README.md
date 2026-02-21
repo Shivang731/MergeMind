@@ -56,3 +56,6 @@ Every PR gets a health score from 0 to 100.
 | AI | Claude (claude-sonnet-4-6) |
 | Auth | GitHub App with JWT + installation tokens |
 
+
+## Failed Hackathon Project
+
