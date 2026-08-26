@@ -59,5 +59,5 @@ Every PR gets a health score from 0 to 100.
 | Auth | GitHub App with JWT + installation tokens |
 
 
-## Failed Hackathon Project
+##  Hackathon Project
 
