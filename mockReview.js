@@ -1,6 +1,8 @@
 const review = {
+    id: "demo",
     prNumber: 42,
     repo: "demo-app",
+    title: "Add password login",
     score: 62,
     status: "FAILED",
     summary: "Critical vulnerabilities found in new authentication logic.",

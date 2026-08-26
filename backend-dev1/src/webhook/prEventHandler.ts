@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { fetchPRDiff, fetchPRFiles } from '../github/diffFetcher';
 import { getInstallationOctokit } from '../github/githubApp';
+import { processReview } from '../review/reviewProcessor';
 import { sendToReviewEngine } from './reviewEngineClient';
 
 const prisma = new PrismaClient();
@@ -86,17 +87,26 @@ export async function handlePullRequestEvent(payload: PRPayload, action: string)
     throw err;
   }
 
-  // Send to Dev 2
+  // Send to external review engine when configured; otherwise use the built-in MVP analyzer.
   try {
-    console.log(`   🚀 Sending to Review Engine (Dev 2)...`);
-    await sendToReviewEngine({
+    const reviewPayload = {
       pullRequestId: pullRequest.id,
       owner, repo, prNumber, prTitle, author,
       baseBranch, headBranch, commitSha,
       diffText, changedFiles, installationId,
-    });
-    console.log(`   ✅ Review Engine notified!`);
+    };
+
+    if (process.env.REVIEW_ENGINE_URL) {
+      console.log(`   Sending to external Review Engine...`);
+      await sendToReviewEngine(reviewPayload);
+      console.log(`   Review Engine notified!`);
+      return;
+    }
+
+    console.log(`   Running built-in MVP review...`);
+    await processReview(reviewPayload);
+    console.log(`   Review complete!`);
   } catch (err) {
-    console.error('   ❌ Could not reach Review Engine (is Dev 2 running?):', err);
+    console.error('   Review failed:', err);
   }
 }

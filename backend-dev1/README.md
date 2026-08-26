@@ -1,6 +1,6 @@
 
 
-This is the intake layer for MergeMind. It listens for pull request events from GitHub, grabs the diff, saves the PR to the database, and hands everything off to the review engine (backend-dev2).
+This is the hackathon MVP service for MergeMind. It listens for pull request events from GitHub, grabs the diff, saves the PR to the database, runs a compact built-in analyzer, and optionally posts a review back to the PR.
 
 ## What it does
 
@@ -8,7 +8,7 @@ This is the intake layer for MergeMind. It listens for pull request events from 
 2. Verify the signature to confirm it's actually from GitHub
 3. Pull the full code diff using the GitHub App token
 4. Save the PR record to the database
-5. Forward everything to backend-dev2 via POST /review/analyze
+5. Run the built-in analyzer, or forward to `REVIEW_ENGINE_URL` if configured
 
 ## Stack
 
@@ -17,6 +17,8 @@ This is the intake layer for MergeMind. It listens for pull request events from 
 - Prisma + SQLite
 - Octokit (GitHub API)
 - GitHub App authentication
+- Built-in diff analyzer
+- Static dashboard API
 
 ## Setup
 ```bash
@@ -36,7 +38,6 @@ GITHUB_APP_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----
 GITHUB_WEBHOOK_SECRET=your-webhook-secret
 PORT=3001
 DATABASE_URL="file:./mergemind.db"
-REVIEW_ENGINE_URL=http://localhost:3002
 INTERNAL_SECRET=mergemind-shared-secret-2024
 ```
 
@@ -72,4 +73,4 @@ src/
 - `src/github/commentPoster.ts`
 - `prisma/schema.prisma`
 
-Their server runs on port 3002 and exposes POST /review/analyze.
+If another team owns the review engine later, set `REVIEW_ENGINE_URL`. Otherwise leave it blank and this service will use the built-in analyzer.

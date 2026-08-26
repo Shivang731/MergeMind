@@ -9,7 +9,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -19,17 +19,17 @@
     <div class="sidebar">
         <div class="logo">MergeMind</div>
 
-        <div class="nav-item active-nav" onclick="showDashboard(this)">Dashboard</div>
-        <div class="nav-item">Pull Requests</div>
-        <div class="nav-item">Repositories</div>
-        <div class="nav-item">Settings</div>
+        <button class="nav-item active-nav" type="button" data-view="dashboard">Dashboard</button>
+        <button class="nav-item" type="button" data-view="pulls">Pull Requests</button>
+        <button class="nav-item" type="button" data-view="repos">Repositories</button>
+        <button class="nav-item" type="button" data-view="settings">Settings</button>
     </div>
 
     <div class="main" id="mainContent"></div>
 
-    <script src="js/mockReview.js"></script>
-    <script src="js/background.js"></script>
-    <script src="js/dashboard.js"></script>
+    <script src="mockReview.js"></script>
+    <script src="background.js"></script>
+    <script src="dashboard.js"></script>
 
 </body>
 
