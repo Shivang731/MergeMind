@@ -14,9 +14,7 @@ GitHub fires webhook → backend-dev1
        ↓
 Fetch the diff from GitHub API
        ↓
-Forward to backend-dev2
-       ↓
-Claude analyzes the code
+Built-in MVP analyzer reviews the diff
        ↓
 Review comment posted on the PR
 ```
@@ -33,8 +31,7 @@ Review comment posted on the PR
 ```
 MergeMind/
 ├── backend-dev1/    # GitHub App, webhook intake, diff fetching
-├── backend-dev2/    # Claude integration, review engine, comment posting
-└── frontend/        # Dashboard UI showing PR status and review history
+└── root dashboard   # Static dashboard served by backend-dev1
 ```
 
 ## Review format
@@ -53,11 +50,21 @@ Every PR gets a health score from 0 to 100.
 | Layer | Tools |
 |---|---|
 | Backend 1 | Node.js, TypeScript, Express, Octokit, Prisma |
-| Backend 2 | Node.js, TypeScript, Express, Anthropic SDK |
+| Review Engine | Built-in TypeScript heuristic analyzer |
 | Database | SQLite (dev) → Postgres (prod) |
-| AI | Claude (claude-sonnet-4-6) |
+| AI | MVP analyzer now; Claude can replace `src/review/analyzer.ts` later |
 | Auth | GitHub App with JWT + installation tokens |
 
 
 ##  Hackathon Project
 
+## Current MVP
+
+This checkout now runs as a compact hackathon MVP from `backend-dev1`:
+
+- `POST /webhook` accepts GitHub pull request events.
+- PR diffs are fetched with the GitHub App installation token.
+- If `REVIEW_ENGINE_URL` is unset, the built-in analyzer reviews the diff.
+- Reviews and issues are stored with Prisma.
+- `GET /api/stats` and `GET /api/reviews` power the dashboard.
+- The static dashboard is served from `http://localhost:3001/`.
